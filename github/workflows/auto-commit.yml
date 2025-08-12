@@ -1,1 +1,26 @@
+name: 🔁 Auto Commit Activity
 
+on:
+  schedule:
+    - cron: '0 8 * * *'  # Tous les jours à 8h UTC
+  workflow_dispatch:      # Permet de le lancer manuellement
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update log file
+        run: |
+          echo "Dernière mise à jour : $(date -u)" > update.log
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add update.log
+          git commit -m "🕒 Mise à jour automatique du fichier log"
+          git push
